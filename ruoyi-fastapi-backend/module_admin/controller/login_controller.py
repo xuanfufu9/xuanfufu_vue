@@ -78,7 +78,6 @@ async def login(
 
 
 @loginController.get('/getInfo', response_model=CurrentUserModel)
-@Log(title='登录人信息', business_type=BusinessType.OTHER, log_type='operation')
 async def get_login_user_info(
     request: Request, current_user: CurrentUserModel = Depends(LoginService.get_current_user)
 ):
@@ -88,7 +87,6 @@ async def get_login_user_info(
 
 
 @loginController.get('/getRouters')
-@Log(title='登录人路由', business_type=BusinessType.OTHER, log_type='operation')
 async def get_login_user_routers(
     request: Request,
     current_user: CurrentUserModel = Depends(LoginService.get_current_user),
@@ -101,7 +99,6 @@ async def get_login_user_routers(
 
 
 @loginController.post('/register', response_model=CrudResponseModel)
-@Log(title='用户注册', business_type=BusinessType.OTHER, log_type='operation')
 async def register_user(request: Request, user_register: UserRegister, query_db: AsyncSession = Depends(get_db)):
     user_register_result = await LoginService.register_user_services(request, query_db, user_register)
     logger.info(user_register_result.message)
@@ -140,7 +137,6 @@ async def register_user(request: Request, user_register: UserRegister, query_db:
 
 
 @loginController.post('/logout')
-@Log(title='退出登录', business_type=BusinessType.OTHER, log_type='operation')
 async def logout(request: Request, token: Optional[str] = Depends(oauth2_scheme)):
     payload = jwt.decode(
         token, JwtConfig.jwt_secret_key, algorithms=[JwtConfig.jwt_algorithm], options={'verify_exp': False}
